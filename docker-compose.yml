@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: ai-support-backend
+
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - ./backend/.env
+
+    environment:
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/knowledge:/app/knowledge
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  frontend:
+    build:
+      context: ./frontend/customer-support-ui
+    container_name: ai-support-frontend
+
+    ports:
+      - "4200:4200"
+
+    depends_on:
+      - backend
